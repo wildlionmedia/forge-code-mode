@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+
+# forge_resolve runtime artifacts (never commit these)
+forge_resolve.guard.jsonl
+tests/artifacts/
+tests/*_report.json
+tests/*_progress.jsonl
+
+# OS
+.DS_Store

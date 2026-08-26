@@ -1,0 +1,16 @@
+# forge_resolve — guard config (EXAMPLE)
+#
+# Copy this to `forge_resolve.toml` next to the package and edit.
+#
+# FAIL-CLOSED: with an empty allowlist, every REAL write (dry_run=False) is
+# refused. Dry runs and reads always work. Add a project name below only when
+# you trust the library to write to it for real. Names must match the project
+# name exactly as it appears in Resolve's Project Manager.
+
+allowlist = [
+    # "My_Scratch_Project",   # <- uncomment to permit real writes to it
+]
+
+# Append-only JSONL audit log. Relative paths resolve against THIS file's
+# folder. Every attempted operation — executed, dry-run, or refused — is logged.
+log_path = "forge_resolve.guard.jsonl"
