@@ -56,15 +56,21 @@ def _config_path() -> str:
     return os.environ.get("FORGE_RESOLVE_CONFIG") or _DEFAULT_CONFIG
 
 
+def _empty_policy() -> dict:
+    return {"mode": "normal", "method_allowlist": [], "method_denylist": [],
+            "block_destructive": False}
+
+
 def load_config() -> dict:
     """
     Read the TOML config. Missing file -> empty allowlist (fail-closed).
 
-    Returned dict is always shaped: {"allowlist": [...], "log_path": str}.
+    Shaped: {"allowlist": [...], "log_path": str, "policy": {...}}.
     """
     path = _config_path()
     if not os.path.exists(path):
-        return {"allowlist": [], "log_path": _DEFAULT_LOG}
+        return {"allowlist": [], "log_path": _DEFAULT_LOG,
+                "policy": _empty_policy()}
 
     with open(path, "rb") as fh:
         raw = tomllib.load(fh)
@@ -80,7 +86,15 @@ def load_config() -> dict:
     else:
         log_path = _DEFAULT_LOG
 
-    return {"allowlist": allowlist, "log_path": log_path}
+    pol_raw = raw.get("policy", {})
+    policy = {
+        "mode": pol_raw.get("mode", "normal"),
+        "method_allowlist": list(pol_raw.get("method_allowlist", [])),
+        "method_denylist": list(pol_raw.get("method_denylist", [])),
+        "block_destructive": bool(pol_raw.get("block_destructive", False)),
+    }
+
+    return {"allowlist": allowlist, "log_path": log_path, "policy": policy}
 
 
 # --------------------------------------------------------------------------- #
@@ -92,6 +106,46 @@ def is_allowed(project_name: str | None) -> bool:
     if not project_name:
         return False
     return project_name in load_config()["allowlist"]
+
+
+# --------------------------------------------------------------------------- #
+# Method policy — an optional second gate for constraining the surface, useful
+# when writes may be composed freely (e.g. the resolve_run MCP tool).
+# --------------------------------------------------------------------------- #
+
+# Clearly-destructive Resolve method names. block_destructive refuses these
+# unless the method is on the method_allowlist.
+DESTRUCTIVE = {
+    "DeleteTimelines", "DeleteClips", "DeleteFolders", "DeleteProject",
+    "DeleteFolder", "CloseProject", "DeleteMarkersByColor", "DeleteAllRenderJobs",
+    "DeleteRenderPreset", "DeleteColorGroup", "ReplaceClip",
+    "ReplaceClipPreserveSubClip", "UnlinkClips", "DeleteVersionByName",
+    "DeleteTakeByIndex", "DeleteFusionCompByName", "Quit", "SetCurrentDatabase",
+}
+
+
+def refusal_reason(op_name: str, project_name: str | None,
+                   dry_run: bool) -> str | None:
+    """
+    Return a reason string if a REAL call should be refused, else None.
+    Central gate used by both @guarded helpers and lib.call().
+    Previews (dry_run) are never refused here — they change nothing.
+    """
+    if dry_run:
+        return None
+    pol = load_config()["policy"]
+    if pol["mode"] == "readonly":
+        return f"read-only mode is on; {op_name!r} is a write"
+    if op_name in pol["method_denylist"]:
+        return f"{op_name!r} is on the method denylist"
+    if pol["method_allowlist"] and op_name not in pol["method_allowlist"]:
+        return f"{op_name!r} is not on the method allowlist"
+    if (pol["block_destructive"] and op_name in DESTRUCTIVE
+            and op_name not in pol["method_allowlist"]):
+        return f"{op_name!r} is destructive and block_destructive is on"
+    if not is_allowed(project_name):
+        return f"project {project_name!r} is not on the allowlist"
+    return None
 
 
 # --------------------------------------------------------------------------- #
@@ -186,14 +240,15 @@ def guarded(func):
             if k not in ("self", "cls") and not hasattr(v, "GetName")
         }
 
-        # Rule 2: a real write to an off-list project is refused, period.
-        if not dry_run and not is_allowed(project_name):
+        # Rule 2 + policy: refuse a real write barred by the allowlist or by
+        # the method policy (read-only mode / method allow-deny / destructive).
+        reason = refusal_reason(func.__name__, project_name, dry_run)
+        if reason:
             log_event(func.__name__, project_name, loggable, "refused",
-                      detail="project not on allowlist")
+                      detail=reason)
             raise GuardRefusal(
-                f"Refused: real write to project {project_name!r} which is "
-                f"not on the allowlist. Add it to forge_resolve.toml to "
-                f"permit writes, or call with dry_run=True to preview."
+                f"Refused: {reason}. Call with dry_run=True to preview, or "
+                f"adjust forge_resolve.toml."
             )
 
         outcome = "dry_run" if dry_run else "executed"

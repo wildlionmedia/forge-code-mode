@@ -27,8 +27,8 @@ mcp = ["mcp>=1.0"]   # only needed for the optional MCP front door (mcp_server/)
 forge-resolve-doctor = "forge_resolve.doctor:main"
 
 [project.urls]
-Homepage = "https://github.com/USERNAME/forge-code-mode"
-Source = "https://github.com/USERNAME/forge-code-mode"
+Homepage = "https://github.com/wildlionmedia/forge-code-mode"
+Source = "https://github.com/wildlionmedia/forge-code-mode"
 
 [tool.setuptools]
 packages = ["forge_resolve", "forge_resolve.examples", "mcp_server"]

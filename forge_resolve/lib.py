@@ -211,13 +211,13 @@ def call(target, method_name: str, *args,
         return {"would_call": method_name, "args": args, "kwargs": kwargs,
                 "project": proj_name, "executed": False}
 
-    if not guard.is_allowed(proj_name):
+    reason = guard.refusal_reason(method_name, proj_name, dry_run)
+    if reason:
         guard.log_event(f"call:{method_name}", proj_name, loggable, "refused",
-                        detail="project not on allowlist")
+                        detail=reason)
         raise guard.GuardRefusal(
-            f"Refused: real call {method_name!r} against project "
-            f"{proj_name!r}, which is not on the allowlist. Add it to "
-            f"forge_resolve.toml, or call with dry_run=True to preview."
+            f"Refused: {reason}. Call with dry_run=True to preview, or adjust "
+            f"forge_resolve.toml."
         )
 
     method = getattr(target, method_name, None)

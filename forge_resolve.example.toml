@@ -14,3 +14,17 @@ allowlist = [
 # Append-only JSONL audit log. Relative paths resolve against THIS file's
 # folder. Every attempted operation — executed, dry-run, or refused — is logged.
 log_path = "forge_resolve.guard.jsonl"
+
+# Optional method policy — a second gate on top of the project allowlist, for
+# constraining the surface when writes may be composed freely (e.g. the
+# resolve_run MCP tool). Omit the whole [policy] block for no method policy.
+[policy]
+# "normal" (default) or "readonly". readonly refuses every real write.
+mode = "normal"
+# If non-empty, ONLY these method names may be called for real (a whitelist).
+method_allowlist = []
+# These method names are always refused for real calls (a blacklist).
+method_denylist = []
+# Refuse a built-in set of clearly-destructive methods (Delete*, Close*, Quit,
+# ReplaceClip, SetCurrentDatabase, ...) unless they're on method_allowlist.
+block_destructive = false

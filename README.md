@@ -57,7 +57,7 @@ The library auto-bootstraps `RESOLVE_SCRIPT_API` / `RESOLVE_SCRIPT_LIB` /
 ## Install
 
 ```bash
-git clone https://github.com/USERNAME/forge-code-mode
+git clone https://github.com/wildlionmedia/forge-code-mode
 cd forge-code-mode
 pip install -e .            # or just put the folder on PYTHONPATH
 cp forge_resolve.example.toml forge_resolve.toml   # then edit the allowlist
@@ -109,6 +109,13 @@ cannot bypass by argument:
    JSONL: `{ts, op, project, args, outcome}`.
 
 Fail-closed: no config = empty allowlist = every real write refused.
+
+**Optional policy layer** — for tighter surfaces (e.g. the `resolve_run` MCP
+tool, which runs arbitrary code), a `[policy]` block in `forge_resolve.toml`
+adds a second gate: `mode = "readonly"` refuses all writes, `method_allowlist` /
+`method_denylist` restrict which methods may run, and `block_destructive = true`
+refuses a built-in set of destructive methods (`Delete*`, `Close*`, `Quit`,
+`ReplaceClip`, …) unless explicitly allowed.
 
 ## Coverage — proven live
 
