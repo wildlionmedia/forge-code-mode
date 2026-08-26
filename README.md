@@ -61,7 +61,20 @@ git clone https://github.com/USERNAME/forge-code-mode
 cd forge-code-mode
 pip install -e .            # or just put the folder on PYTHONPATH
 cp forge_resolve.example.toml forge_resolve.toml   # then edit the allowlist
+forge-resolve-doctor        # preflight: is Resolve scripting reachable?
 ```
+
+`forge-resolve-doctor` (or `python -m forge_resolve.doctor`) checks the whole
+chain — env, scripting library, module import, live handle, scripting=Local,
+config, catalog — and prints a fix for anything that fails.
+
+## Two ways to use it
+
+- **As a library** (this README) — import `forge_resolve`, write a script.
+- **As an MCP front door** for Claude Desktop / Cursor — a single
+  `resolve_run(code)` tool that runs scripts against the library. One tool, not
+  325. Optional, see [`mcp_server/README.md`](mcp_server/README.md):
+  `pip install -e ".[mcp]"`.
 
 ## The five things you'll actually use
 
@@ -126,9 +139,12 @@ forge_resolve/
   connection.py   # get to Resolve, reconnect, typed errors
   guard.py        # @guarded + allowlist + JSONL — refusal in code
   lib.py          # live catalog + call() + pool primitives + relink
+  doctor.py       # preflight: is scripting ready?  (forge-resolve-doctor)
   examples/relink.py   # a worked job: scan → dry-run → guarded relink
+mcp_server/       # optional MCP front door: one resolve_run(code) tool
 SKILL.md          # how an agent should drive this (write a script, not a tool)
 tests/api_coverage.py  # the live API exerciser
+docs/             # RESULTS.md + how-we-built-it.md
 ```
 
 ## Status & support

@@ -20,9 +20,15 @@ classifiers = [
 ]
 dependencies = []   # stdlib only — tomllib requires Python 3.11+ for the guard
 
+[project.optional-dependencies]
+mcp = ["mcp>=1.0"]   # only needed for the optional MCP front door (mcp_server/)
+
+[project.scripts]
+forge-resolve-doctor = "forge_resolve.doctor:main"
+
 [project.urls]
 Homepage = "https://github.com/USERNAME/forge-code-mode"
 Source = "https://github.com/USERNAME/forge-code-mode"
 
 [tool.setuptools]
-packages = ["forge_resolve", "forge_resolve.examples"]
+packages = ["forge_resolve", "forge_resolve.examples", "mcp_server"]
