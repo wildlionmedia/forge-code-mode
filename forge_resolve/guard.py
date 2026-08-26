@@ -1,12 +1,12 @@
 """
-guard.py — the refusal layer. It runs regardless of what any caller intended.
+guard.py – the refusal layer. It runs regardless of what any caller intended.
 
 Three things, enforced together by the @guarded decorator:
 
   1. dry_run defaults to True. Callers opt IN to writing, never out of it.
   2. A project allowlist, read from config. A real write (dry_run=False) to a
      project not on the list is refused, whatever the argument says.
-  3. An append-only JSONL log. Every attempt — executed, dry-run, or refused —
+  3. An append-only JSONL log. Every attempt – executed, dry-run, or refused – 
      gets one line: timestamp, operation, project, arguments, outcome.
 
 Refusal is a raised GuardRefusal, never a return value that can be ignored.
@@ -42,7 +42,7 @@ class GuardRefusal(Exception):
 
 
 # --------------------------------------------------------------------------- #
-# Paths — config and log both live at the repo root, next to the package dir.
+# Paths – config and log both live at the repo root, next to the package dir.
 # --------------------------------------------------------------------------- #
 
 _PACKAGE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -109,7 +109,7 @@ def is_allowed(project_name: str | None) -> bool:
 
 
 # --------------------------------------------------------------------------- #
-# Method policy — an optional second gate for constraining the surface, useful
+# Method policy – an optional second gate for constraining the surface, useful
 # when writes may be composed freely (e.g. the resolve_run MCP tool).
 # --------------------------------------------------------------------------- #
 
@@ -129,7 +129,7 @@ def refusal_reason(op_name: str, project_name: str | None,
     """
     Return a reason string if a REAL call should be refused, else None.
     Central gate used by both @guarded helpers and lib.call().
-    Previews (dry_run) are never refused here — they change nothing.
+    Previews (dry_run) are never refused here – they change nothing.
     """
     if dry_run:
         return None
@@ -181,7 +181,7 @@ def log_event(op: str, project: str | None, args: dict, outcome: str,
 
 
 # --------------------------------------------------------------------------- #
-# Project-name resolution — accept a name, None (current), or a live handle.
+# Project-name resolution – accept a name, None (current), or a live handle.
 # --------------------------------------------------------------------------- #
 
 def _project_name(project) -> str | None:
@@ -234,7 +234,7 @@ def guarded(func):
         dry_run = params.get("dry_run", True)
         project_name = _project_name(params.get("project"))
 
-        # Arguments to log — drop live handles / self, keep the plain stuff.
+        # Arguments to log – drop live handles / self, keep the plain stuff.
         loggable = {
             k: v for k, v in params.items()
             if k not in ("self", "cls") and not hasattr(v, "GetName")

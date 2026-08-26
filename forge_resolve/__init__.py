@@ -1,5 +1,5 @@
 """
-forge_resolve — a thin library for driving DaVinci Resolve by writing scripts.
+forge_resolve – a thin library for driving DaVinci Resolve by writing scripts.
 
 Not an MCP server. Not a daemon. Import it, look a method up in the live
 catalog, compose a loop, read the result. Only the result comes back.

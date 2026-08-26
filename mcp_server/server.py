@@ -1,22 +1,22 @@
 """
-FORGE. Code Mode — MCP front door.
+FORGE. Code Mode – MCP front door.
 
 The plug-and-play way to reach code mode from Claude Desktop / Cursor. It is a
-SINGLE code-execution server, not one tool per Resolve method — exactly the
+SINGLE code-execution server, not one tool per Resolve method – exactly the
 "code execution with MCP" pattern. The model writes a script; this runs it
 against `forge_resolve` and returns the result.
 
 Three tools:
-  resolve_run(code)   — execute Python against forge_resolve, return result
-  resolve_find(query) — search the live method catalog (discovery)
-  resolve_doctor()    — preflight: is scripting ready?
+  resolve_run(code) – execute Python against forge_resolve, return result
+  resolve_find(query) – search the live method catalog (discovery)
+  resolve_doctor() – preflight: is scripting ready?
 
 Requires the MCP SDK (optional extra):  pip install "forge-code-mode[mcp]"
 Run:  python -m mcp_server.server        (stdio transport)
 
 Note: resolve_run executes arbitrary Python locally. WRITES still go through the
 guard (dry-run default + allowlist + JSONL). Reads via the raw handle are
-unrestricted — see the guard's policy options if you need a tighter surface.
+unrestricted – see the guard's policy options if you need a tighter surface.
 """
 
 from __future__ import annotations
@@ -52,7 +52,7 @@ def resolve_run(code: str) -> str:
 
     In scope: `fr` (forge_resolve), `connection`, `lib`, `guard`. Reads are
     free; mutations go through the guard (dry_run default + allowlist + JSONL).
-    Assign to `result` OR print — both are returned.
+    Assign to `result` OR print – both are returned.
 
     Example:
         scan = lib.scan_offline()
@@ -63,7 +63,7 @@ def resolve_run(code: str) -> str:
     buf = io.StringIO()
     try:
         with contextlib.redirect_stdout(buf):
-            exec(code, ns)          # noqa: S102 — code mode is the point
+            exec(code, ns)          # noqa: S102 – code mode is the point
     except Exception:
         return "ERROR:\n" + traceback.format_exc()
     out = buf.getvalue()

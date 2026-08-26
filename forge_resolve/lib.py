@@ -1,11 +1,11 @@
 """
-lib.py — the library of methods for code mode.
+lib.py – the library of methods for code mode.
 
 Model: a live method catalog + a safe injector. The agent writes a script,
 looks a method up here, calls it, Resolve does the job. Only the result comes
 back.
 
-Discovery is LIVE. The method list is not shipped or frozen — it is read at
+Discovery is LIVE. The method list is not shipped or frozen – it is read at
 runtime from Resolve's own README, which lives at
 $RESOLVE_SCRIPT_API/README.txt and is overwritten by Resolve on every update.
 Parse results are cached against that file's mtime/size, so a Resolve upgrade
@@ -21,7 +21,7 @@ auto-refreshes the catalog with zero maintenance.
          dry_run default, allowlist enforced, every attempt logged.
 
 Reads are free: call the method straight on the handle (obj.GetName()).
-Use call() for MUTATIONS — the things the guard must see.
+Use call() for MUTATIONS – the things the guard must see.
 """
 
 from __future__ import annotations
@@ -33,7 +33,7 @@ from . import connection, guard
 
 
 # --------------------------------------------------------------------------- #
-# Live catalog — parsed from Resolve's own README at runtime.
+# Live catalog – parsed from Resolve's own README at runtime.
 # --------------------------------------------------------------------------- #
 
 # The API objects the README documents. A method line is only recorded while
@@ -51,7 +51,7 @@ _catalog_cache: dict = {}
 
 
 def _readme_path() -> str:
-    """The README that ships with — and is replaced by — this Resolve build."""
+    """The README that ships with – and is replaced by – this Resolve build."""
     api = os.environ.get("RESOLVE_SCRIPT_API", "")
     return os.path.join(api, "README.txt")
 
@@ -108,7 +108,7 @@ def catalog() -> dict:
 
     Cached against the README's mtime/size, so it re-parses automatically the
     first time you call it after a Resolve update. Needs no live Resolve
-    connection — discovery works even with Resolve closed.
+    connection – discovery works even with Resolve closed.
     """
     path = _readme_path()
     if not os.path.exists(path):
@@ -184,7 +184,7 @@ def describe(obj) -> dict:
 
 
 # --------------------------------------------------------------------------- #
-# call() — the guarded injector. Any mutating method, safely.
+# call() – the guarded injector. Any mutating method, safely.
 # --------------------------------------------------------------------------- #
 
 def call(target, method_name: str, *args,
@@ -197,7 +197,7 @@ def call(target, method_name: str, *args,
     dry_run=False:           allowlist-checked, executed, logged. Returns the
                              method's real return value.
 
-    Reads do not belong here — call them straight on the handle.
+    Reads do not belong here – call them straight on the handle.
     """
     proj_name = guard._project_name(project)
     loggable = {
@@ -240,7 +240,7 @@ def call(target, method_name: str, *args,
 
 
 # --------------------------------------------------------------------------- #
-# Pool primitives — the reusable reads any job composes against.
+# Pool primitives – the reusable reads any job composes against.
 # --------------------------------------------------------------------------- #
 
 def _walk_folder(folder, out: list) -> None:
@@ -290,7 +290,7 @@ def is_offline(path: str) -> bool:
 
 
 # --------------------------------------------------------------------------- #
-# Composed helpers — the jobs you do often, built from the primitives above.
+# Composed helpers – the jobs you do often, built from the primitives above.
 # All mutations route through the guard.
 # --------------------------------------------------------------------------- #
 
@@ -400,7 +400,7 @@ def relink_with_variations(old_root: str, new_root: str, *,
                            project=None, dry_run: bool = True,
                            device_aliases: dict | None = None) -> dict:
     """
-    Relink by matching filename under new_root — tolerates device-folder and
+    Relink by matching filename under new_root – tolerates device-folder and
     date-format differences in the tree. Guarded. Same return shape as
     relink_by_root.
     """

@@ -1,5 +1,5 @@
 """
-connection.py — get to DaVinci Resolve and stay there.
+connection.py – get to DaVinci Resolve and stay there.
 
 This is the boring layer. No cleverness. Its only job is:
   - bootstrap the scripting environment (env vars),
@@ -21,7 +21,7 @@ import platform
 
 
 # --------------------------------------------------------------------------- #
-# Typed exceptions — this module never returns None to signal failure.
+# Typed exceptions – this module never returns None to signal failure.
 # --------------------------------------------------------------------------- #
 
 class ResolveError(Exception):
@@ -69,7 +69,7 @@ def _bootstrap_env() -> None:
     """
     Populate RESOLVE_SCRIPT_API / RESOLVE_SCRIPT_LIB / PYTHONPATH.
 
-    An existing env var always wins — this only fills the gaps with the
+    An existing env var always wins – this only fills the gaps with the
     platform default. Also makes the API's Modules/ folder importable so
     `import DaVinciResolveScript` works.
     """
@@ -95,7 +95,7 @@ def _bootstrap_env() -> None:
 
 # --------------------------------------------------------------------------- #
 # Import-time check: fail loudly if Studio's scripting library is absent.
-# We do NOT require Resolve to be *running* at import — that is what the
+# We do NOT require Resolve to be *running* at import – that is what the
 # lazy handle + reconnect below is for. We only prove the library exists,
 # i.e. that Resolve Studio is installed and the paths are right.
 # --------------------------------------------------------------------------- #

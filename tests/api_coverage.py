@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-api_full.py — drive EVERY documented Resolve method in a scratch project.
+api_coverage.py – drive EVERY documented Resolve method in a scratch project.
 
 Goal: 100% invocation. Each method lands in one bucket:
-  ok       — called, returned truthy/again valid, no raise
-  falsey   — called, returned False/None (API's own "no-op"), no raise
-  error    — called, raised                          (+ exception)
-  skipped  — cannot be called at all                 (+ reason)
+  ok – called, returned truthy/again valid, no raise
+  falsey – called, returned False/None (API's own "no-op"), no raise
+  error – called, raised                          (+ exception)
+  skipped – cannot be called at all                 (+ reason)
 
 Only genuinely-uncallable methods stay skipped (Quit, cloud login).
 Everything else is invoked with real arguments built from live fixtures.
@@ -16,7 +16,7 @@ previously-open project is restored at the end. Destructive calls are made
 against throwaway sub-objects (temp timelines/clips/folders/presets).
 
 Run with Resolve Studio open:
-    python3 forge_resolve/tests/api_full.py
+    python3 tests/api_coverage.py /path/to/a/folder/of/short/clips
 """
 
 import os
@@ -44,25 +44,25 @@ PROGRESS = os.path.join(HERE, "api_coverage_progress.jsonl")
 
 # Long-running AI / interactive methods that cannot run in an unattended
 # suite (they download models, render, track, or otherwise block for minutes).
-# Excluded on purpose and recorded as such — no silent gaps.
+# Excluded on purpose and recorded as such – no silent gaps.
 EXCLUDE = {
-    ("Folder", "TranscribeAudio"): "long-running AI (speech) — unattended-unsafe",
-    ("Folder", "AnalyzeForSlate"): "long-running AI analysis — unattended-unsafe",
-    ("Folder", "AnalyzeForIntellisearch"): "long-running AI analysis — unattended-unsafe",
-    ("Folder", "RemoveMotionBlur"): "long-running AI render — unattended-unsafe",
-    ("MediaPoolItem", "TranscribeAudio"): "long-running AI (speech) — unattended-unsafe",
-    ("MediaPoolItem", "AnalyzeForSlate"): "long-running AI analysis — unattended-unsafe",
-    ("MediaPoolItem", "AnalyzeForIntellisearch"): "long-running AI analysis — unattended-unsafe",
-    ("MediaPoolItem", "RemoveMotionBlur"): "long-running AI render — unattended-unsafe",
-    ("Timeline", "CreateSubtitlesFromAudio"): "long-running AI transcription — unattended-unsafe",
-    ("TimelineItem", "CreateMagicMask"): "AI mask/tracking, can block — unattended-unsafe",
-    ("Project", "GenerateSpeech"): "AI text-to-speech — unattended-unsafe",
-    ("Project", "RenderWithQuickExport"): "performs a full render — unattended-unsafe",
-    ("ProjectManager", "RestoreProject"): "needs a .dra archive — unattended-unsafe",
+    ("Folder", "TranscribeAudio"): "long-running AI (speech) – unattended-unsafe",
+    ("Folder", "AnalyzeForSlate"): "long-running AI analysis – unattended-unsafe",
+    ("Folder", "AnalyzeForIntellisearch"): "long-running AI analysis – unattended-unsafe",
+    ("Folder", "RemoveMotionBlur"): "long-running AI render – unattended-unsafe",
+    ("MediaPoolItem", "TranscribeAudio"): "long-running AI (speech) – unattended-unsafe",
+    ("MediaPoolItem", "AnalyzeForSlate"): "long-running AI analysis – unattended-unsafe",
+    ("MediaPoolItem", "AnalyzeForIntellisearch"): "long-running AI analysis – unattended-unsafe",
+    ("MediaPoolItem", "RemoveMotionBlur"): "long-running AI render – unattended-unsafe",
+    ("Timeline", "CreateSubtitlesFromAudio"): "long-running AI transcription – unattended-unsafe",
+    ("TimelineItem", "CreateMagicMask"): "AI mask/tracking, can block – unattended-unsafe",
+    ("Project", "GenerateSpeech"): "AI text-to-speech – unattended-unsafe",
+    ("Project", "RenderWithQuickExport"): "performs a full render – unattended-unsafe",
+    ("ProjectManager", "RestoreProject"): "needs a .dra archive – unattended-unsafe",
 }
 
 # Project-lifecycle methods pop a GUI confirm modal ("Save changes?" /
-# delete-confirm) when invoked as a test target — a modal blocks the scripting
+# delete-confirm) when invoked as a test target – a modal blocks the scripting
 # server entirely and wedges the whole session (same class as Quit). They are
 # NOT invoked as targets. Note: build() still uses CreateProject/SaveProject
 # once, in a controlled way that does not prompt, so those ARE exercised.
@@ -94,11 +94,11 @@ HARD_SKIP = {
     ("ProjectManager", "SetCurrentDatabase"): "would switch DB out from under us",
     # Project-lifecycle: pop a confirm modal that wedges scripting. build() uses
     # CreateProject/SaveProject once, controlled; these are never test targets.
-    ("ProjectManager", "CloseProject"): "pops a confirm modal — unattended-unsafe",
-    ("ProjectManager", "CreateProject"): "pops a confirm modal — unattended-unsafe (build uses it once)",
-    ("ProjectManager", "DeleteProject"): "pops a confirm modal — unattended-unsafe",
-    ("ProjectManager", "ImportProject"): "pops a confirm modal — unattended-unsafe",
-    ("ProjectManager", "LoadProject"): "reloads session / pops modal — unattended-unsafe",
+    ("ProjectManager", "CloseProject"): "pops a confirm modal – unattended-unsafe",
+    ("ProjectManager", "CreateProject"): "pops a confirm modal – unattended-unsafe (build uses it once)",
+    ("ProjectManager", "DeleteProject"): "pops a confirm modal – unattended-unsafe",
+    ("ProjectManager", "ImportProject"): "pops a confirm modal – unattended-unsafe",
+    ("ProjectManager", "LoadProject"): "reloads session / pops modal – unattended-unsafe",
 }
 
 
@@ -285,7 +285,7 @@ def dispatch(c):
         return ok
     D[("ProjectManager", "CloseProject")] = pm_close_reopen
 
-    # These are deferred (SESSION_LAST) — they switch the current project, so
+    # These are deferred (SESSION_LAST) – they switch the current project, so
     # they run only after every object has been swept. No need to restore.
     def pm_create():
         p = c.pm.CreateProject("FORGE_TMP_CREATE")
@@ -621,7 +621,7 @@ def main():
 
     # Snapshot each object's live methods NOW, from fresh handles, straight off
     # the installed build's own objects. This is the ground truth we compare the
-    # README catalog against — taken from the installed Resolve, nothing external.
+    # README catalog against – taken from the installed Resolve, nothing external.
     live_methods = {n: set(dir(inst)) for n, inst in instances.items()
                     if inst is not None}
 
@@ -690,7 +690,7 @@ def main():
               "rows": sorted(cov.rows, key=lambda r: (r["object"], r["method"]))}
     with open(REPORT, "w", encoding="utf-8") as fh:
         json.dump(report, fh, indent=2)
-    print(f"Resolve {report['resolve_version']} — {total} methods")
+    print(f"Resolve {report['resolve_version']} – {total} methods")
     print(f"invoked {invoked}/{total} | counts {counts}")
     print("report:", REPORT)
 

@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "forge-code-mode"
 version = "0.1.0"
-description = "Code mode for DaVinci Resolve — an agent drives Resolve by writing scripts against a live method catalog, not one tool per API method."
+description = "Code mode for DaVinci Resolve – an agent drives Resolve by writing scripts against a live method catalog, not one tool per API method."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
@@ -18,7 +18,7 @@ classifiers = [
     "Operating System :: OS Independent",
     "Topic :: Multimedia :: Video",
 ]
-dependencies = []   # stdlib only — tomllib requires Python 3.11+ for the guard
+dependencies = []   # stdlib only – tomllib requires Python 3.11+ for the guard
 
 [project.optional-dependencies]
 mcp = ["mcp>=1.0"]   # only needed for the optional MCP front door (mcp_server/)

@@ -1,5 +1,5 @@
 """
-doctor.py — preflight check. Tells you exactly what's wrong before you script.
+doctor.py – preflight check. Tells you exactly what's wrong before you script.
 
     python -m forge_resolve.doctor
 
@@ -88,7 +88,7 @@ CHECKS = [
 
 
 def run() -> list:
-    """Return a list of {name, ok, detail, fix} — usable programmatically."""
+    """Return a list of {name, ok, detail, fix} – usable programmatically."""
     out = []
     for name, fn in CHECKS:
         try:
@@ -111,8 +111,8 @@ def main() -> int:
             if r["fix"]:
                 print(f"        fix: {r['fix']}")
     print("-" * 60)
-    print("READY — you can run scripts." if all_ok
-          else "NOT READY — fix the FAIL lines above.")
+    print("READY – you can run scripts." if all_ok
+          else "NOT READY – fix the FAIL lines above.")
     return 0 if all_ok else 1
 
 

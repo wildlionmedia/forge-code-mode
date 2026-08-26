@@ -1,4 +1,4 @@
-# forge_resolve — code mode for DaVinci Resolve
+# forge_resolve – code mode for DaVinci Resolve
 
 **Write a script. Don't ask for a tool.**
 
@@ -19,31 +19,31 @@ refuses unsafe writes. That's the whole surface.
 ## The five things you'll actually use
 
 ```python
-lib.find("relink")            # discover methods — searches names + docs, LIVE
+lib.find("relink")            # discover methods – searches names + docs, LIVE
 lib.methods("MediaPool")      # all methods on one object, with signatures
-lib.describe(handle)          # live dir() vs catalog — spots API drift
+lib.describe(handle)          # live dir() vs catalog – spots API drift
 lib.scan_offline()            # read-only example: offline clips in a timeline
 lib.call(obj, "Method", *a, dry_run=True, project="Name")   # guarded injector
 ```
 
-## Discovery is live — never hard-code a method list
+## Discovery is live – never hard-code a method list
 
 `lib.catalog()` / `lib.find()` parse Resolve's own README at runtime
 (`$RESOLVE_SCRIPT_API/README.txt`), which Resolve overwrites on every update.
 The catalog re-parses automatically when that file changes. So the method list
-always matches the installed Resolve. When you need a method, `find()` it — do
+always matches the installed Resolve. When you need a method, `find()` it – do
 not guess a signature from memory.
 
 ## Reads are free. Writes go through the guard.
 
-- **Reads**: call the method straight on the handle — `project.GetName()`,
+- **Reads**: call the method straight on the handle – `project.GetName()`,
   `mpi.GetClipProperty("File Path")`. No ceremony.
 - **Writes (anything mutating)**: go through `lib.call(...)` or a `@guarded`
   helper. The guard enforces three things you cannot bypass by argument:
-  1. `dry_run=True` is the **default** — a real write is opt-in, never opt-out.
+  1. `dry_run=True` is the **default** – a real write is opt-in, never opt-out.
   2. the target project must be on the **allowlist** in `forge_resolve.toml`,
      or the write is **refused** (raised `GuardRefusal`), whatever you passed.
-  3. every attempt — executed, dry-run, or refused — is logged to the JSONL
+  3. every attempt – executed, dry-run, or refused – is logged to the JSONL
      audit path.
 
 Preview first (`dry_run=True`), read the plan, then commit (`dry_run=False`).
@@ -59,14 +59,14 @@ lib.call(mp, "RelinkClips", items, folder,    # the write, guarded
 
 ## Worked example
 
-`forge_resolve/examples/relink.py` — scan → dry-run → guarded real relink,
+`forge_resolve/examples/relink.py` – scan → dry-run → guarded real relink,
 end to end. Read it to see the shape, then write your own job the same way.
 
 ## Read the code, not a restatement
 
-- `connection.py` — handles, reconnect, typed errors.
-- `guard.py` — `@guarded`, allowlist, JSONL. The refusal lives in code.
-- `lib.py` — catalog/find/methods/describe/call + pool primitives + relink.
+- `connection.py` – handles, reconnect, typed errors.
+- `guard.py` – `@guarded`, allowlist, JSONL. The refusal lives in code.
+- `lib.py` – catalog/find/methods/describe/call + pool primitives + relink.
 
-If a method you need isn't a named helper yet, you don't wait — `lib.call(...)`
+If a method you need isn't a named helper yet, you don't wait – `lib.call(...)`
 reaches any of the ~325 methods, safely.

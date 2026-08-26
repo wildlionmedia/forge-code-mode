@@ -2,7 +2,7 @@
 
 Produced by `tests/api_coverage.py` against **DaVinci Resolve Studio 21.0.4.5**
 (macOS). The exerciser drives every documented method in a throwaway project and
-records the outcome. Every method lands in exactly one bucket — no silent gaps.
+records the outcome. Every method lands in exactly one bucket – no silent gaps.
 
 ## Headline
 
@@ -10,13 +10,13 @@ records the outcome. Every method lands in exactly one bucket — no silent gaps
 |---|---:|
 | Distinct documented methods (from the installed README) | **375** |
 | Invoked (executed without raising) | **350** |
-| — returned a real value (`ok`) | 171 |
-| — called cleanly, returned None/False for the test state (`falsey`) | 179 |
+| – returned a real value (`ok`) | 171 |
+| – called cleanly, returned None/False for the test state (`falsey`) | 179 |
 | Errors | **0** |
 | Skipped (genuinely uncallable unattended) | **25** |
 
 "Falsey" means the method ran fine but returned nothing meaningful given the
-scratch state (e.g. a getter for a value that isn't set) — it was still invoked
+scratch state (e.g. a getter for a value that isn't set) – it was still invoked
 successfully.
 
 ## Per object
@@ -37,7 +37,7 @@ successfully.
 | Graph | 2 | 9 | 0 |
 | ColorGroup | 5 | 0 | 0 |
 
-## The 25 skips — the honest floor
+## The 25 skips – the honest floor
 
 Every one is genuinely uncallable in an unattended sweep, with its reason:
 
@@ -65,10 +65,10 @@ Because discovery is a live catalog cross-checked against the running build, the
 sweep surfaces where BMD's shipped README and the actual build disagree on
 21.0.4.5:
 
-- **Documented but absent:** `Project.DeleteRenderJobByIndex` — in the README,
+- **Documented but absent:** `Project.DeleteRenderJobByIndex` – in the README,
   not exposed by the live object. It's the single "drift" skip above.
 - **Live but undocumented:** methods the objects expose that the README doesn't
-  list — e.g. `MediaPool.CreateStereoClip`, `ProjectManager.ArchiveProject`,
+  list – e.g. `MediaPool.CreateStereoClip`, `ProjectManager.ArchiveProject`,
   `Timeline.AnalyzeDolbyVision`, plus the internal `Print` on every object.
 
 This is exactly why the method list is never frozen: it's read from the

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-examples/relink.py — a worked example of code mode. NOT part of the API.
+examples/relink.py – a worked example of code mode. NOT part of the API.
 
 This is the shape every job takes: import forge_resolve, discover/compose,
 run it, read the result. Run it straight from a terminal:
@@ -11,7 +11,7 @@ run it, read the result. Run it straight from a terminal:
 Reads are free; the one real write goes through the guard (dry_run=False),
 so it is refused unless ProjectName is on the allowlist in forge_resolve.toml.
 
-Examples CAN print — they are the human-facing demo. Library code never does.
+Examples CAN print – they are the human-facing demo. Library code never does.
 """
 
 import sys
@@ -32,12 +32,12 @@ def main(argv):
     print(f"[scan] {scan['offline_count']}/{scan['total']} clips offline "
           f"in timeline {scan['timeline']!r}")
 
-    # 2. Dry run — what WOULD change, changing nothing.
+    # 2. Dry run – what WOULD change, changing nothing.
     plan = lib.relink_by_root(old_root, new_root, project=project)  # dry_run=True
     print(f"[dry ] would relink {len(plan['planned'])}, "
           f"{len(plan['unresolved'])} unresolved")
 
-    # 3. The real write — guarded. Refused unless the project is allowlisted.
+    # 3. The real write – guarded. Refused unless the project is allowlisted.
     done = lib.relink_by_root(old_root, new_root,
                               project=project, dry_run=False)
     print(f"[real] relinked {done['relinked']}, failed {len(done['failed'])}")

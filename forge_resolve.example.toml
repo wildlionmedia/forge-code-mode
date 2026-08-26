@@ -1,4 +1,4 @@
-# forge_resolve — guard config (EXAMPLE)
+# forge_resolve – guard config (EXAMPLE)
 #
 # Copy this to `forge_resolve.toml` next to the package and edit.
 #
@@ -12,10 +12,10 @@ allowlist = [
 ]
 
 # Append-only JSONL audit log. Relative paths resolve against THIS file's
-# folder. Every attempted operation — executed, dry-run, or refused — is logged.
+# folder. Every attempted operation – executed, dry-run, or refused – is logged.
 log_path = "forge_resolve.guard.jsonl"
 
-# Optional method policy — a second gate on top of the project allowlist, for
+# Optional method policy – a second gate on top of the project allowlist, for
 # constraining the surface when writes may be composed freely (e.g. the
 # resolve_run MCP tool). Omit the whole [policy] block for no method policy.
 [policy]
