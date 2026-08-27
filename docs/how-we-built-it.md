@@ -179,9 +179,16 @@ tool menu can't tell the model why a call was wrong in context. A traceback can.
 
 It's a reference implementation of code mode against a real, large, stateful API.
 Clean, documented, runnable. It isn't a managed product and doesn't pretend to
-be. I've run it on one machine, macOS, Resolve 21.0.4.5. Windows and other
-versions are untested. The paths are in `connection.py` and should work, but I
-haven't proven it, and I'd rather say so than imply a matrix I don't have.
+be. I've run it on macOS with Python 3.14 and on Windows with Python 3.13, both
+against Resolve Studio 21.0.4.5. Other Resolve versions are untested.
+
+Windows taught me one thing worth passing on. Resolve's `fusionscript.dll` is
+built for a specific Python. Point Python 3.12 at it and `import
+DaVinciResolveScript` doesn't raise – it takes the whole process down with an
+access violation, so no try/except can save you. Python 3.13 loads it clean.
+Same box, same Resolve, one version of Python apart. The doctor walks the chain
+and shows you exactly where it dies, which is the difference between a two-minute
+fix and an afternoon.
 
 The point is the pattern. Give the agent a thin library and a live catalog. Keep
 the loop in code. Keep refusal in code. Read the method list from the software

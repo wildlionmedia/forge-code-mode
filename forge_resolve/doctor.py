@@ -100,6 +100,7 @@ def run() -> list:
 
 
 def main() -> int:
+    # ASCII-only console output: a Windows terminal (cp1252) garbles non-ASCII.
     results = run()
     print("forge_resolve doctor\n" + "-" * 60)
     all_ok = True
@@ -111,8 +112,8 @@ def main() -> int:
             if r["fix"]:
                 print(f"        fix: {r['fix']}")
     print("-" * 60)
-    print("READY – you can run scripts." if all_ok
-          else "NOT READY – fix the FAIL lines above.")
+    print("READY: you can run scripts." if all_ok
+          else "NOT READY: fix the FAIL lines above.")
     return 0 if all_ok else 1
 
 

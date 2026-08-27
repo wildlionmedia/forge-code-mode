@@ -54,6 +54,16 @@ conversation hops, and never goes stale on a Resolve update.
 The library auto-bootstraps `RESOLVE_SCRIPT_API` / `RESOLVE_SCRIPT_LIB` /
 `PYTHONPATH` from platform defaults; set those env vars to override.
 
+**Windows: match the Python version to fusionscript.** Resolve's
+`fusionscript.dll` is built for a specific Python ABI. Load it into the wrong
+interpreter and `import DaVinciResolveScript` dies with a hard access violation,
+not a catchable error. On Resolve Studio 21 this is Python 3.13; 3.12 crashes on
+import. If `python` on your PATH is the wrong one, call the right one with the py
+launcher: `py -3.13 -m forge_resolve.doctor`. Run the doctor first – it walks the
+whole chain and tells you where it breaks.
+
+Tested on macOS (Python 3.14) and Windows (Python 3.13), Resolve Studio 21.0.4.5.
+
 ## Install
 
 ```bash
